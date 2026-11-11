@@ -1,0 +1,2 @@
+# Preserve exact source bytes across clones: assembly inputs are SHA256-pinned.
+* -text

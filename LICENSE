@@ -1,0 +1,35 @@
+A7C2 Pre-Capture Research-Only Non-Commercial License 1.0
+Copyright (c) 2026 cjryrx
+Original project: https://github.com/cjryrx/a7c2-precapture
+
+Permission is granted to inspect, study, modify and redistribute the original
+code and documentation of this project solely for non-commercial research and
+learning, subject to all conditions below.
+
+1. Any form of reposting, mirroring, copying, repackaging or redistribution,
+   including modified versions, must clearly credit cjryrx, link to the original
+   repository, and retain this license, risk notices and disclaimer. Modified
+   versions must clearly identify their modifications and must not imply the
+   original author's endorsement.
+2. Commercial use is prohibited. This includes selling or charging for this
+   project's code, packages or modification services, or incorporating its
+   original content into commercial products or services without separate
+   written permission from the author.
+3. This project supplies no Sony firmware and grants no rights to firmware,
+   trademarks or other third-party material. Users must obtain their own input
+   firmware lawfully. Do not add firmware, backups, dumps, encoded images or
+   generated firmware to this repository or its releases.
+4. Third-party components retain their own licenses. These restrictions apply
+   to this project's original content, and do not revoke independent rights
+   granted by upstream licenses. See THIRD_PARTY_NOTICES.md.
+
+THE PROJECT IS EXPERIMENTAL, FOR RESEARCH AND LEARNING ONLY, AND MAY CONTAIN
+KNOWN OR UNKNOWN DEFECTS. IT IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE AUTHOR AND CONTRIBUTORS
+ARE NOT LIABLE FOR BRICKED DEVICES, ABNORMAL OR LOST FUNCTIONS, FREEZES,
+CORRUPTED OR LOST DATA, DAMAGE, COSTS, OR ANY OTHER LOSS ARISING FROM THE USE,
+GENERATION, MODIFICATION, INSTALLATION OR UPDATE OF FIRMWARE USING THIS PROJECT.
+ALL SUCH OPERATIONS ARE UNDERTAKEN AT THE USER'S OWN RISK.
+
+This is a source-available research license with a non-commercial restriction;
+it is not an OSI-approved open-source license.
