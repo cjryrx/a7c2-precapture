@@ -199,11 +199,13 @@ def build(source, destination, zig, acknowledge):
     require(sha(source) == profile["input_sha256"], "Input changed during build")
     target = destination / "BODYDATA_PRECAPTURE_800MS_EXPERIMENTAL.DAT"
     pending.rename(target)
-    report = {"tool_version": "0.1.0-research", "profile": profile["id"], "input_sha256": profile["input_sha256"],
+    report = {"tool_version": r["tool_version"], "profile": profile["id"], "input_sha256": profile["input_sha256"],
               "output_sha256": output_sha, "output_plain_sha256": sha(modified), "roundtrip_verified": True,
               "comparison": comparison, "effective_window_ms": 800, "output_version_label": "2.00",
               "camera_access": False, "hardware_stability_verified": False, "custom_seconds_supported": False,
-              "warning": "Research only. Unresolved lockup report; no stable firmware or successful-install guarantee. Do not redistribute firmware/work files."}
+              "trigger": "AF_function_button", "halfpress_starts_cache": False,
+              "reference_hardware_test_scope_passed": profile.get("hardware_test_scope_passed", False),
+              "warning": "Research only. Limited reference tests are not long-term stability or installation guarantees. RAW retention may be shorter than800ms. Do not redistribute firmware/work files."}
     (destination / "build-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))
     return report

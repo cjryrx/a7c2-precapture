@@ -1,0 +1,1 @@
+SECTIONS { . = 0xC2FD40; .text : { *(.text*) } } original_resume = 0xB17426;

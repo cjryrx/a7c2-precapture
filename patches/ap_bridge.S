@@ -72,6 +72,18 @@ bridge_shooting:
  ldr w2,[x0]
  str w2,[sp,#36]
  str w2,[sp,#64]
+ /* Normalize the native trigger model before taking the snapshot lock.
+    Native2566EB8 owns its model lock through178F950/178F974.
+    Inputs already captured in stack packet; x20 is callee-saved. */
+ bl native_trigger_getter
+ ldr w0,[x0]
+ cmp w0,#3
+ b.hs shooting_invalid
+ cmp w0,#2
+ b.eq shooting_model_snapshot
+ mov w1,#2
+ bl native_trigger_menu_setter
+shooting_model_snapshot:
  /* Same model lock and actual getters as native3120FA8.
     Release model lock BEFORE either transport send/wait. */
  add x0,sp,#80
@@ -81,6 +93,8 @@ bridge_shooting:
  str w0,[sp,#68]
  bl native_trigger_getter
  ldr w0,[x0]
+ cmp w0,#2
+ b.ne shooting_trigger_raced
  str w0,[sp,#72]
  add x0,sp,#80
  bl native_model_unlock
@@ -102,6 +116,10 @@ bridge_shooting:
  cset w0,ne
  str w0,[x20]
  b shooting_return
+shooting_trigger_raced:
+ add x0,sp,#80
+ bl native_model_unlock
+ b shooting_invalid
 shooting_invalid:
  mov w0,#1
  str w0,[x20]
@@ -115,5 +133,5 @@ shooting_return:
 time_table:
  .word 5,10,20,30,40,50,60,70,80,90,100,200,300,400,800,600,700,800,900,1000
 .size time_table,.-time_table
-.hidden native_send,native_model_lock,native_model_unlock,native_time_getter,native_trigger_getter
+.hidden native_trigger_menu_setter,native_send,native_model_lock,native_model_unlock,native_time_getter,native_trigger_getter
 .section .note.GNU-stack,"",%progbits

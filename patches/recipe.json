@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "id": "ilce7cm2-precapture-800ms-vdf-token-20261111",
+  "id": "ilce7cm2-precapture-afon-raw-release-pair-20261112",
   "effective_window_ms": 800,
   "custom_seconds_supported": false,
   "output_package_version": "2.00",
@@ -41,13 +41,46 @@
     {
       "name": "ap_bridge",
       "offset": 749254400,
-      "size": 468,
-      "old_sha256": "fad0291d5a68a5bcfa50634082d9313e1636346fe46371801de06576f8d1f4a6",
-      "code_sha256": "438850d9e87c8ece4da25c2ddfb9de5e2a9af819bc4fc739acf9a65a8759bc04",
+      "size": 520,
+      "old_sha256": "20aa497d9bd4c19e851e3df6e386700faada213db38acf7679f6365832830b3d",
+      "code_sha256": "7dc24a52786498c5c36a2d7c84711f94ef63f3d11199998256accb28a79ce4f5",
       "link_address": 85617920,
       "target": "aarch64",
-      "source_sha256": "9511dfcabb1fec7d2b486aaa2e5f1f2d27d8be042fcf9f0e72acda417c9bb956",
-      "linker_sha256": "c3dd35116b2a4130069d14fcf0c1a540136024bf6d9018d431ee90a5b676df26"
+      "source_sha256": "ee50de0ca4518ba974f7498584991a09cbdb207f4d7845500e6263e2fa863204",
+      "linker_sha256": "aed2849ac4cbe3bde56bdedeb175bbe58a959c6934edea202a11ef5114988fe9"
+    },
+    {
+      "name": "cp_raw_pressure",
+      "offset": 1119804928,
+      "size": 106,
+      "old_sha256": "34dbd6bf55d0d075d666181d9278b8387482a8b5804e44e1ddaafe6876dadc15",
+      "code_sha256": "9055aa02a40363281bf69a62a53e574606256d97ac0620e8836307ca3bfc249b",
+      "link_address": 12778496,
+      "target": "arm",
+      "source_sha256": "eef0ebf8e29461666c877ee83032e851a5f4ab785f866b9b5e569027d545dd4c",
+      "linker_sha256": "1207ebe50a811fab2aa5fc322166ce6e41f5f1bbbc523f39593839e62a9e6ad3"
+    },
+    {
+      "name": "cp_lamp_filter",
+      "offset": 1119805248,
+      "size": 86,
+      "old_sha256": "36e85b8ca5cc07b01ad98462a7f8afd1794a65455dc33ea47adcb9f50dfe5207",
+      "code_sha256": "ad08f846b957d7e20b2bb4293dff6e8648e048f4ab3387876a78af03ddf89f9c",
+      "link_address": 12778816,
+      "target": "arm",
+      "source_sha256": "55fdddca6b07b044ee0d833a54305a72bce248a04650f91d64456cf5e907ee5e",
+      "linker_sha256": "0748bfa6a333e10499219a278f69ac3e0c4a052c6ebeeb22d2a26284066ab8bb"
+    },
+    {
+      "name": "cp_receiver_pair",
+      "offset": 1119805344,
+      "size": 200,
+      "old_sha256": "6d9c54dee5660c46886f32d80e57e9dd0ffa57ee0cd2a762b036d9c8e0c3a33a",
+      "code_sha256": "d73cb8749ef1c498eda2a6b6b47da9cdd255b3ec838b7eeca5a266ee3af142d8",
+      "link_address": 12778912,
+      "target": "arm",
+      "source_sha256": "9945cee24ef17bed2ea04f601ece4545169fa03798406779e7243d6e96199699",
+      "linker_sha256": "822acaff8d02e6551ef37d9a190086aef82658b8ee762275592c86302ea71a59"
     }
   ],
   "scalar_edits": [
@@ -55,13 +88,13 @@
       "offset": 657261152,
       "size": 2,
       "old_sha256": "6e8add265e6114af7c616c5136b8277979b64d66135190d4e786a4e57d8b55c8",
-      "value_le": 28372
+      "value_le": 28424
     },
     {
       "offset": 657261160,
       "size": 2,
       "old_sha256": "6e8add265e6114af7c616c5136b8277979b64d66135190d4e786a4e57d8b55c8",
-      "value_le": 28372
+      "value_le": 28424
     },
     {
       "offset": 688636468,
@@ -145,13 +178,13 @@
       "offset": 906123360,
       "size": 2,
       "old_sha256": "6e8add265e6114af7c616c5136b8277979b64d66135190d4e786a4e57d8b55c8",
-      "value_le": 28372
+      "value_le": 28424
     },
     {
       "offset": 906123368,
       "size": 2,
       "old_sha256": "6e8add265e6114af7c616c5136b8277979b64d66135190d4e786a4e57d8b55c8",
-      "value_le": 28372
+      "value_le": 28424
     },
     {
       "offset": 973294948,
@@ -176,6 +209,30 @@
       "size": 2,
       "old_sha256": "f7c953104465a7431539371462ae6d9c50bf7f49f2ff484ac38cec8c8a1ba501",
       "value_le": 12288
+    },
+    {
+      "offset": 1111583940,
+      "size": 4,
+      "old_sha256": "a1133b1eca859c8778227a7ad7229bac93332fcb78c143d09fd1205bead28ad6",
+      "value_le": 4050449367
+    },
+    {
+      "offset": 1111584892,
+      "size": 4,
+      "old_sha256": "d81fa20cc0f07365dbe5e94262901258c634a696605e7c9a68f1badedd674397",
+      "value_le": 3083662294
+    },
+    {
+      "offset": 1111584896,
+      "size": 2,
+      "old_sha256": "b4c43b50bf245bd727623e3c775a8fcfb8d823d00b57dd65f7f79dd33f126315",
+      "value_le": 48896
+    },
+    {
+      "offset": 1111584994,
+      "size": 4,
+      "old_sha256": "ccdfdc693367566c09ea3c6771c4034331061246a2832b793fb8ff7e6fc37aa6",
+      "value_le": 4152357846
     },
     {
       "offset": 1111699994,
@@ -232,6 +289,12 @@
       "value_le": 4040684410
     },
     {
+      "offset": 1118438874,
+      "size": 4,
+      "old_sha256": "41995eee258c1381ca0872444441387cee47a47ad8a159cc1e4cd21c9042a9a7",
+      "value_le": 4245090637
+    },
+    {
       "offset": 1118599836,
       "size": 4,
       "old_sha256": "a9b2863b60fa166268046e52a27dde52dddeca889dcd7ad5cc6328aba6e6046f",
@@ -250,10 +313,22 @@
       "value_le": 3174035741
     },
     {
+      "offset": 1118634310,
+      "size": 4,
+      "old_sha256": "3de9dddd13b7b3698793c200ccc30d85a5443f858f6692e2a4dde536d8d2e80b",
+      "value_le": 3193696541
+    },
+    {
       "offset": 1118650528,
       "size": 4,
       "old_sha256": "aa390414fd82a574dbebedf7849d6c9602c15157cfb05a4418412ed915806a62",
       "value_le": 3178688793
+    },
+    {
+      "offset": 1118656034,
+      "size": 4,
+      "old_sha256": "b3b2ef89eecebbc0476087fb982fe835e49582dbfbe7c32bd9fde5b752e4e71a",
+      "value_le": 3163418904
     },
     {
       "offset": 1122196828,
@@ -314,25 +389,30 @@
   "profiles": [
     {
       "id": "official-2.01",
-      "description": "Untouched ILCE-7CM2 official 2.01; resulting combination NOT hardware tested",
+      "description": "Untouched ILCE-7CM2 official2.01; AF-ON/RAW/lamp/release-pair combination offline validated only",
       "input_size": 1139929560,
       "input_sha256": "eb4943e6099754d64deaef5047942e9bfe258f232d0b7bc39fa23b3cd10e1e31",
       "plain_size": 1135475712,
       "plain_sha256": "03eee07301010ff644fae1073f7c7f6dd2d60278f18aa3e6053938d5f1426d1f",
-      "output_plain_sha256": "76d41ee0fe850e6e96acaa48e2c8009ca2e8b4d078161e5984257f41b4a469e9",
-      "output_dat_sha256": "f243214ef0de73b07e1d67f5027a2a55ed49066caedaeca3bc74c94ff294736c",
-      "physical_stability_verified": false
+      "output_plain_sha256": "1e0a85eaa1a485601830dd63376486c1e9427f5c0e74bbaace66838600a0034c",
+      "output_dat_sha256": "6257ae8fb2f89475e61b008f9c36aa6418b39f61225d6c0e70f8f4cbdcedc025",
+      "physical_stability_verified": false,
+      "hardware_test_scope_passed": false
     },
     {
       "id": "research-fl23-2.00",
-      "description": "Exact pre-existing FL23/burst/custom-sound research base; reproduces installed c235 experiment",
+      "description": "Exact pre-existing research base; reproduces2026-11-12 tested2e5137 package; limitedJPEG/uncompressedRAW Hi+ testpassed",
       "input_size": 1139929560,
       "input_sha256": "20376f1d38bb0089932b8145f8421fc9165c02156cb8a14178b18af77f39542e",
       "plain_size": 1135475712,
       "plain_sha256": "37c333ea6c38c16d2cb4674dc6624bda78b07a9caffb13c9cfedd16cbb1fe341",
-      "output_plain_sha256": "052953835a4c006d91473ae4fb64bd04735c6cb29fe9b55b7c42731d83c39955",
-      "output_dat_sha256": "c2359fad3101128fabae3fe1ebec83305fd320bf45687984401d4279869b0870",
-      "physical_stability_verified": false
+      "output_plain_sha256": "f132670a63c6d3fb02d31abe970d22c876bb92e514578d67d2c467bbef58c377",
+      "output_dat_sha256": "2e51372f8c6958e62d3e8f9ea8714d0835daf7631fba0ef254abe259d1d75ded",
+      "physical_stability_verified": false,
+      "hardware_test_scope_passed": true
     }
-  ]
+  ],
+  "tool_version": "0.2.0-research",
+  "trigger": "AF_function_button",
+  "halfpress_starts_cache": false
 }
