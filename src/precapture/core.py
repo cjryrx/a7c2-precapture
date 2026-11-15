@@ -26,8 +26,40 @@ def external(path):
 
 def recipe():
     r = json.loads((ROOT / "patches/recipe.json").read_text(encoding="utf-8"))
-    require(r["format"] == 1 and r["effective_window_ms"] == 800, "Unsupported recipe")
+    require(r["format"] == 2 and r["effective_window_ms"] == 800, "Unsupported recipe")
+    validate_recipe(r)
     return r
+
+def validate_recipe(r):
+    ids = [p["id"] for p in r["profiles"]]
+    require(len(ids) == len(set(ids)), "Duplicate profile IDs")
+    specific = r.get("profile_scalar_edits", {})
+    require(set(specific) <= set(ids), "Unknown profile-specific edit scope")
+    for profile in r["profiles"]:
+        selected_edits(r, profile)
+
+
+def selected_edits(r, profile):
+    """Keep inherited research repairs separate from untouched official input."""
+    matches = [p for p in r["profiles"] if p["id"] == profile["id"]]
+    require(len(matches) == 1 and matches[0] == profile, "Unknown or changed profile")
+    edits = list(r["scalar_edits"]) + list(r.get("profile_scalar_edits", {}).get(profile["id"], []))
+    for entry in edits:
+        require(isinstance(entry["size"], int) and 1 <= entry["size"] <= 4, "Scalar patch must be at most four bytes")
+        require(isinstance(entry["value_le"], int) and 0 <= entry["value_le"] < 1 << (8 * entry["size"]), "Scalar value does not fit")
+    spans = sorted((e["offset"], e["offset"] + e["size"]) for e in r["payloads"] + edits)
+    require(all(isinstance(a, int) and 0 <= a < b <= profile["plain_size"] for a, b in spans), "Invalid recipe span")
+    require(all(a[1] <= b[0] for a, b in zip(spans, spans[1:])), "Overlapping recipe spans")
+    return edits
+
+
+def check_profile_guards(mm, profile, phase="preimage"):
+    require(phase in ("preimage", "postimage"), "Unknown guard phase")
+    for guard in profile.get(phase + "_guards", []):
+        start, count = guard["offset"], guard["size"]
+        require(isinstance(start, int) and start >= 0 and 0 < count <= 16 and start + count <= len(mm), "Invalid profile guard")
+        require(hashlib.sha256(mm[start:start + count]).hexdigest() == guard["sha256"], "Profile " + phase + " instruction guard differs: " + guard["label"])
+
 
 def identify(path, r=None):
     path = external(path)
@@ -160,6 +192,7 @@ def build(source, destination, zig, acknowledge):
     from vendor import sony_dat_container as dat
     r = recipe()
     source, profile = identify(source, r)
+    edits = selected_edits(r, profile)
     destination = external(destination)
     require(not destination.exists(), "Output directory already exists; never overwrite a prior build")
     require(destination.parent.is_dir(), "Create the output parent directory first")
@@ -179,11 +212,13 @@ def build(source, destination, zig, acknowledge):
     print("3/6 apply bounded patches and partition checksums", flush=True)
     allowed = set()
     with modified.open("r+b") as f, mmap.mmap(f.fileno(), 0) as mm:
+        check_profile_guards(mm, profile)
         for entry in r["payloads"]:
             allowed.update(checked_write(mm, entry, payloads[entry["name"]]))
-        for entry in r["scalar_edits"]:
+        for entry in edits:
             require(1 <= entry["size"] <= 4, "Scalar patch must be at most four bytes")
             allowed.update(checked_write(mm, entry, entry["value_le"].to_bytes(entry["size"], "little")))
+        check_profile_guards(mm, profile, "postimage")
         allowed.update(update_checksums(mm, parts))
         mm.flush()
     print("4/6 compare every plaintext byte against the change whitelist", flush=True)
@@ -203,7 +238,9 @@ def build(source, destination, zig, acknowledge):
               "output_sha256": output_sha, "output_plain_sha256": sha(modified), "roundtrip_verified": True,
               "comparison": comparison, "effective_window_ms": 800, "output_version_label": "2.00",
               "camera_access": False, "hardware_stability_verified": False, "custom_seconds_supported": False,
-              "trigger": "AF_function_button", "halfpress_starts_cache": False,
+              "trigger": r["trigger"], "halfpress_starts_cache": r["halfpress_starts_cache"],
+              "mode_scope": "still_photo_system_mode_2_option_0",
+              "research_movie_lr_repair_applied": profile.get("research_movie_lr_repair", False),
               "reference_hardware_test_scope_passed": profile.get("hardware_test_scope_passed", False),
               "warning": "Research only. Limited reference tests are not long-term stability or installation guarantees. RAW retention may be shorter than800ms. Do not redistribute firmware/work files."}
     (destination / "build-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

@@ -1,6 +1,6 @@
 """Fail-closed tests using synthetic data only; no firmware or camera required."""
 from pathlib import Path
-import hashlib, importlib.util, json, sys, tempfile, unittest, zipfile
+import copy, hashlib, importlib.util, json, sys, tempfile, unittest, zipfile
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -62,6 +62,62 @@ class GuardTests(unittest.TestCase):
         for p in r["payloads"]:
             self.assertEqual(core.sha(ROOT / "patches" / (p["name"] + ".S")), p["source_sha256"])
             self.assertEqual(core.sha(ROOT / "patches" / (p["name"] + ".ld")), p["linker_sha256"])
+
+    def test_version_and_halfpress_recipe_agree(self):
+        import precapture
+        r = core.recipe()
+        self.assertEqual(precapture.__version__, r["tool_version"])
+        self.assertEqual(r["trigger"], "halfpress_only")
+        self.assertTrue(r["halfpress_starts_cache"])
+
+    def test_movie_lr_repair_only_in_research_profile(self):
+        r = core.recipe()
+        profiles = {p["id"]: p for p in r["profiles"]}
+        official, research = profiles["official-2.01"], profiles["research-fl23-2.00"]
+        off = 0x429bda27
+        def covers(entry):
+            return entry["offset"] <= off < entry["offset"] + entry["size"]
+        self.assertFalse(any(covers(e) for e in core.selected_edits(r, official)))
+        edits = [e for e in core.selected_edits(r, research) if covers(e)]
+        self.assertEqual(len(edits), 1)
+        self.assertEqual((edits[0]["offset"], edits[0]["size"], edits[0]["value_le"]), (off, 1, 0xbd))
+        self.assertEqual(official["preimage_guards"][0]["sha256"], official["postimage_guards"][0]["sha256"])
+        self.assertNotEqual(research["preimage_guards"][0]["sha256"], research["postimage_guards"][0]["sha256"])
+        self.assertFalse(official["research_movie_lr_repair"])
+        self.assertTrue(research["research_movie_lr_repair"])
+        self.assertFalse(official["hardware_test_scope_passed"])
+
+    def test_reject_unknown_duplicate_or_changed_profile(self):
+        r = core.recipe()
+        changed = copy.deepcopy(r)
+        changed["profile_scalar_edits"]["unexpected"] = []
+        with self.assertRaisesRegex(core.PatchError, "Unknown profile"):
+            core.validate_recipe(changed)
+        changed = copy.deepcopy(r)
+        changed["profiles"].append(changed["profiles"][0])
+        with self.assertRaisesRegex(core.PatchError, "Duplicate profile"):
+            core.validate_recipe(changed)
+        changed_profile = dict(r["profiles"][0], input_sha256="0" * 64)
+        with self.assertRaisesRegex(core.PatchError, "Unknown or changed"):
+            core.selected_edits(r, changed_profile)
+
+    def test_reject_common_and_profile_patch_overlap(self):
+        r = copy.deepcopy(core.recipe())
+        r["profile_scalar_edits"][r["profiles"][0]["id"]].append(dict(r["scalar_edits"][0]))
+        with self.assertRaisesRegex(core.PatchError, "Overlapping"):
+            core.validate_recipe(r)
+
+    def test_both_profile_guard_phases_fail_closed(self):
+        buf = bytearray(b"abcdefgh")
+        original = bytes(buf)
+        guard = {"offset": 2, "size": 4, "sha256": hashlib.sha256(b"cdef").hexdigest(), "label": "synthetic_instruction"}
+        p = {"preimage_guards": [guard], "postimage_guards": [guard]}
+        for phase in ("preimage", "postimage"):
+            core.check_profile_guards(buf, p, phase)
+            bad = bytearray(buf); bad[3] ^= 1
+            with self.assertRaisesRegex(core.PatchError, phase):
+                core.check_profile_guards(bad, p, phase)
+        self.assertEqual(bytes(buf), original)
 
     def test_audit_rejects_binary_and_encoded_content(self):
         for name, data in (("BODYDATA.DAT", b"sample"), ("test.py", b"x\0y"), ("blob.txt", b"A" * 401)):

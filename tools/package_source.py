@@ -18,7 +18,7 @@ def package(output):
             data = (ROOT / name).read_bytes()
             if hashlib.sha256(data).hexdigest() != expected["sha256"]:
                 raise ValueError("Source changed during packaging: " + name)
-            info = zipfile.ZipInfo("a7c2-precapture/" + name, date_time=(2026, 11, 12, 0, 0, 0))
+            info = zipfile.ZipInfo("a7c2-precapture/" + name, date_time=(2026, 11, 15, 0, 0, 0))
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
             z.writestr(info, data)

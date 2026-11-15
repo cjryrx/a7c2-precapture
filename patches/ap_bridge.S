@@ -79,21 +79,29 @@ bridge_shooting:
  ldr w0,[x0]
  cmp w0,#3
  b.hs shooting_invalid
- cmp w0,#2
+ cmp w0,#1
  b.eq shooting_model_snapshot
- mov w1,#2
+ mov w1,#1
  bl native_trigger_menu_setter
 shooting_model_snapshot:
  /* Same model lock and actual getters as native3120FA8.
     Release model lock BEFORE either transport send/wait. */
  add x0,sp,#80
  bl native_model_lock
+ bl native_mode_getter
+ cmp w0,#2
+ b.ne shooting_force_off
+ bl native_option_getter
+ cbz w0,shooting_mode_ready
+shooting_force_off:
+ str wzr,[sp,#40]
+shooting_mode_ready:
  bl native_time_getter
  ldr w0,[x0]
  str w0,[sp,#68]
  bl native_trigger_getter
  ldr w0,[x0]
- cmp w0,#2
+ cmp w0,#1
  b.ne shooting_trigger_raced
  str w0,[sp,#72]
  add x0,sp,#80
@@ -135,3 +143,34 @@ time_table:
 .size time_table,.-time_table
 .hidden native_trigger_menu_setter,native_send,native_model_lock,native_model_unlock,native_time_getter,native_trigger_getter
 .section .note.GNU-stack,"",%progbits
+
+.text
+.balign 4
+.global bridge_exit_still
+.type bridge_exit_still,%function
+bridge_exit_still:
+ stp x29,x30,[sp,#-64]!
+ mov x29,sp
+ str x19,[sp,#16]
+ mov x19,x0
+ ldr w2,[x0,#0x14]
+ str w2,[sp,#32]
+ mov w2,#1
+ str w2,[sp,#36]
+ str wzr,[sp,#40]
+ add x0,sp,#32
+ add x1,sp,#44
+ bl bridge_shooting
+ ldr w0,[sp,#44]
+ cbnz w0,bridge_exit_failed
+ mov x0,x19
+ ldr x19,[sp,#16]
+ ldp x29,x30,[sp],#64
+ sub sp,sp,#0x850
+ b native_exit_resume
+bridge_exit_failed:
+ bl native_system_error
+ bl native_abort
+ brk #0
+.size bridge_exit_still,.-bridge_exit_still
+.hidden native_mode_getter,native_option_getter,native_exit_resume,native_system_error,native_abort

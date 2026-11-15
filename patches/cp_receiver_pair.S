@@ -14,7 +14,7 @@ pair_mark:
  movt r0,#0x1a5
  ldrb r0,[r0,#0xf1]
  and r0,r0,#0x71
- cmp r0,#0x21
+ cmp r0,#0x11
  bne mark_done
  movw r0,#0x9fe0
  movt r0,#0x120
