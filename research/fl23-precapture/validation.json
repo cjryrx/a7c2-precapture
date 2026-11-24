@@ -1,0 +1,35 @@
+{
+  "kind": "source-only offline research candidate",
+  "base_revision": "7c16e4911963209ff84f57e94744c059d19d2891",
+  "hardware_verified": false,
+  "sources": [
+    {
+      "source": "cp_bridge.S",
+      "sha256": "7840bb164157575007784c22e81ef2436c5f4cc9fcd79b830754298e7621b501"
+    },
+    {
+      "source": "cp_context_boot.S",
+      "sha256": "09906a7d3ad9089b6ebecd88ef3e9bb6f05cf21abee79032d8e63a327f02d3dc"
+    },
+    {
+      "source": "cp_fastoff.S",
+      "sha256": "e421587d35f9b7e58cee79800066e71d4de67001336187d836cdca34fe6b77fc"
+    },
+    {
+      "source": "cp_receiver_pair.S",
+      "sha256": "6ee3440db64340567c860e46303063276181223ace10a38113a03a6a2a8f7d23"
+    },
+    {
+      "source": "cp_vdf_token.S",
+      "sha256": "98275f55138715c6fc6d3f752a790a3d7d4e688a0bd2882243342962eed44876"
+    }
+  ],
+  "offline_checks": {
+    "native_boot_test": "PASS_BOUNDED_NATIVE_BOOT_MAPPING_CLEAR_ALLOCATOR",
+    "native_color_test": "PASS_BOUNDED_COLOR_ABI_WITH_CONDITIONAL_LEGACY_GLOBAL_TRANSITION_COUNTEREXAMPLE",
+    "relocated_lifecycle_test": "PASS_RELOCATED_NATIVE_TOKEN_RECEIVER_BRIDGE",
+    "relocated_fastoff_test": "PASS_RELOCATED_FASTOFF_NATIVE_EXTERNAL_EMBEDDED"
+  },
+  "fastoff_cases": 19,
+  "color_reference_revision": "e86ff3de980cdf38a1282637e7e94ce3b0f956ec"
+}
